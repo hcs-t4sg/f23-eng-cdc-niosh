@@ -1,12 +1,22 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 
-obj_name = "Body001"
 # get the 3D model document
 doc = App.ActiveDocument   
 # get the visual representation model document
 gui_doc = Gui.ActiveDocument
 
-print(doc)
-obj = doc.getObject(obj_name)
-print(obj)
+obj = doc.getObject("Fusion001")
+
+# Example of Vertex
+print(obj.Shape.Vertexes[0].X, obj.Shape.Vertexes[0].Y, obj.Shape.Vertexes[0].Z)
+
+# Example of Face
+print(obj.Shape.Faces[0].Area)
+
+# Load Box and Print if They're Touching
+intersectingBox = doc.getObject("Box002")
+print(len(obj.Shape.common(intersectingBox.Shape.Shells).Vertexes)!=0)
+
+outsideBox = doc.getObject("Box003")
+print(len(obj.Shape.common(outsideBox.Shape.Shells).Vertexes)!=0)
