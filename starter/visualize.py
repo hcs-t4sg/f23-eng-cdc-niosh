@@ -43,11 +43,11 @@ a.ViewObject.Proxy = 0
 
 p = Points.Points()
 
-p.addPoints([FreeCAD.Vector(vertices[i][0], vertices[i][1], vertices[i][2])
+p.addPoints([App.Vector(vertices[i][0], vertices[i][1], vertices[i][2])
             for i in range(len(vertices))])
 a.Points = p
 
-c = [(1.0, 0.0, 0.0)] * 100
+c = [(1.0, 0.0, 0.0)] * len(vertices)
 a.Colors = c
 a.ViewObject.DisplayMode = "Color"
 
