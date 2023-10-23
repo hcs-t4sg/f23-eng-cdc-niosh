@@ -60,17 +60,6 @@ def find_intersection_point(line_vertices, plane_vertices):
 
     # Find the normal vector
     normal_vector = np.cross(vector1, vector2)
-
-    # line_x = line_vertices[0][0] + line_direction[0] * t
-    # line_y = line_vertices[0][1] + line_direction[1] * t
-    # line_z = line_vertices[0][2] + line_direction[2] * t
-
-    # plane_eq = normal_vector[0] * u + normal_vector[0] * -plane_vertices[0][1] +
-
-    # x = plane_vertices[0][0] + u * vector1[0] + v * vector2[0]
-    # y = plane_vertices[0][1] + u * vector1[1] + v * vector2[1]
-    # z = plane_vertices[0][2] + u * vector1[2] + v * vector2[2]
-
     coeff1 = normal_vector[0]
     coeff2 = normal_vector[1]
     coeff3 = normal_vector[2]
@@ -81,18 +70,29 @@ def find_intersection_point(line_vertices, plane_vertices):
     print(normal_vector)
     print("sum: ", sum)
 
-    eq1 = sp.Eq(coeff1 * (line_vertices[0][0] + line_direction[0] * t) + coeff2 * (
-        line_vertices[0][1] + line_direction[1] * t) + coeff3 * (line_vertices[0][2] + line_direction[2] * t), sum)
+    eq1 = sp.Eq((coeff1 * (line_vertices[0][0] + line_direction[0] * t)) + (coeff2 * (
+        line_vertices[0][1] + line_direction[1] * t)) + (coeff3 * (line_vertices[0][2] + line_direction[2] * t)), sum)
+    print(eq1)
     ans = sp.solve(eq1, t)
     print("answer", ans)
 
-    # print("normal vector: ", normal_vector)
-    # constant = 0
-    # for i in range(3):
-    #     constant += normal_vector[i] * plane_vertices[0][i]
-    #     print(plane_vertices[0][i])
+    x = sp.symbols('x')
 
-    # print(constant)
+    equation = sp.Eq(x**2 - 4.32345324, 0)
+
+    # Solve the equation
+    solutions = sp.solve(equation, x)
+
+    # Print the solutions
+    print("Solutions:", solutions)
+
+# print("normal vector: ", normal_vector)
+# constant = 0
+# for i in range(3):
+#     constant += normal_vector[i] * plane_vertices[0][i]
+#     print(plane_vertices[0][i])
+
+# print(constant)
 
 
 def get_line_vertices(line):
@@ -135,15 +135,20 @@ def get_plane_vertices(plane):
 #     print("The line and the plane do not intersect.")
 
 plane_vertices = np.array([
-    [-26.551074, 29.194627000000004, 0.0],
-    [45.091893, 29.194627000000004, 0.0],
-    [45.091893, -34.722119000000006, 0.0],
-    [-26.551074, -34.722119000000006, 0.0]
+    [-26.551074, 29.194627, 0.0],
+    [45.091893, 29.1946270, 0.0],
+    [45.091893, -34.7221190, 0.0],
+    [-26.551074, -34.7221190, 0.0]
 ])
+
+# [-26.551074, 29.194627000000004, 0.0],
+# [45.091893, 29.194627000000004, 0.0],
+# [45.091893, -34.722119000000006, 0.0],
+# [-26.551074, -34.722119000000006, 0.0]
 
 line_vertices = np.array([
     [-112.944015, -52.98405, -2],
-    [64.359177, 26.171736, 2.]
+    [82.760554, -41.767499, 2.]
 ])
 
 find_intersection_point(line_vertices, plane_vertices)
