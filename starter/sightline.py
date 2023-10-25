@@ -14,7 +14,7 @@ Sources:
 - https://extremelearning.com.au/how-to-evenly-distribute-points-on-a-sphere-more-effectively-than-the-canonical-fibonacci-lattice/
 '''
 
-def generateSightLines(N = 200, origin = (0, 0, 0)):
+def generateSightLineDirections(N = 200):
     
     vectors = []
     inverseGoldenRatio = (5**0.5 - 1)/2
@@ -23,11 +23,10 @@ def generateSightLines(N = 200, origin = (0, 0, 0)):
         theta = 2 * math.pi * i * inverseGoldenRatio
         phi = math.acos(1 - 2 * (i+0.5) / N)
 
-        vectors.append((
-            origin[0] + math.cos(theta) * math.sin(phi) * 10000, 
-            origin[1] + math.sin(theta) * math.sin(phi) * 10000,
-            origin[2] + math.cos(phi) * 10000
-        ))
+        direction = ( math.cos(theta) * math.sin(phi) * 100, math.sin(theta) * math.sin(phi) * 100, math.cos(phi) * 100 )
+        vectors.append(
+            (round(direction[0], 6), round(direction[1], 6), round(direction[2], 6))
+        )
 
     return vectors 
 
@@ -55,5 +54,5 @@ def my_create_line(pt1, pt2, obj_name):
     App.ActiveDocument.recompute()
     return obj
 
-for i, vector in enumerate(generateSightLines(N = 100)):
-    my_create_line((0,0,0), vector, f"line_{i}")
+# for i, vector in enumerate(generateSightLines(N = 100)):
+#     my_create_line((0,0,0), vector, f"line_{i}")

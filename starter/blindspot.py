@@ -2,7 +2,7 @@ import math
 import FreeCAD as App
 import Part
 
-from sightline import generateSightLines
+from sightline import generateSightLineDirections
 
 def my_create_line(pt1, pt2, obj_name):
     obj = App.ActiveDocument.addObject("Part::Line", obj_name)
@@ -20,34 +20,60 @@ def my_create_line(pt1, pt2, obj_name):
 driverHead = (352.5016492337469, 339.719522252282, -105.5012320445894)
 
 # list of sightlines = generateSightLines(N = # of sightlines, origin = driver’s head coordinates)
-sightlines = generateSightLines(300, driverHead)
+sightlines = generateSightLineDirections(300)
 
 # list of mesh objects
 doc = App.ActiveDocument
 
 mesh_list = []
-for obj_name in [
-    "_73f_Tire_FrontLeft_Detached_",
-    "_73f_Tire_BackRight_Detached_",
-    "_73f_Tire_BackLeft_Detached_",
-    "_73f_Tire_FrontRight_Detached_",
-    "Chasis_Detached_",
-    "_73f_Bucket_",
-    "AxleRear_Detached_",
-    "BatteryUnit_Detached_",
-    "PistonsRear_Detached_",
-    "Platform_Detached_",
-    "RearHydraulics_Detached_",
-]: # omitted "Chasis_Detached_" in place of windows
+parts_list = [
+    "_73f_Bucket",
+    "_73f_Tire_FrontLeft_Detached",
+    "_73f_Tire_BackRight_Detached",
+    "_73f_Tire_BackLeft_Detached",
+    "_73f_Tire_FrontRight_Detached",
+    "Chasis_Detached",
+    "AxleRear_Detached",
+    "BatteryUnit_Detached",
+    "PistonsRear_Detached",
+    "Platform_Detached",
+    "RearHydraulics_Detached",
+]
+for obj_name in parts_list: # omitted "Chasis_Detached_" in place of windows
+    # print(f"Extracted Object: {obj_name}")
     mesh_list.append(doc.getObject(obj_name).Mesh)
+
+print("RUNNING")
 
 # Find intersections
 for i, sightline_dir in enumerate(sightlines):
+
     intersects = False
-    for mesh_i in mesh_list:
-        if len(mesh_i.nearestFacetOnRay(driverHead, sightline_dir))!=0:
+
+    for name_i, mesh_i in zip(parts_list, mesh_list):
+        # print(f"PART NAME: {name_i}")
+        
+        intersectionList = mesh_i.nearestFacetOnRay(driverHead, sightline_dir)
+        if len(intersectionList)!=0:
+            # print(f"intersects: {list(intersectionList.values())} times")
             intersects = True
-            break  
+            break
+
 
     if intersects:
-        my_create_line(driverHead, sightline_dir, f"line_{i}")
+        sightline_end = tuple([a + 10 * b for a, b in zip(driverHead, sightline_dir)])
+        intersection_dir = tuple([b - a for a, b in zip(driverHead, list(intersectionList.values())[0])])
+        
+        if not(sightline_dir[0] * intersection_dir[0] > 0 and sightline_dir[1] * intersection_dir[1] > 0 and sightline_dir[2] * intersection_dir[2] > 0) : 
+            print("Directions don't align", intersection_dir, sightline_dir)
+
+        else:
+            my_create_line(driverHead, list(intersectionList.values())[0], f"{name_i}_{i}")
+            my_create_line(driverHead, sightline_end, f"{name_i}_FUCK_{i}")
+    
+    # if not intersects:
+    #     my_create_line(driverHead, sightline_dir, f"{intersectsName}_{i}")
+
+
+
+   
