@@ -27,23 +27,25 @@ doc = App.ActiveDocument
 
 mesh_list = []
 parts_list = [
-    "_73f_Bucket",
-    "_73f_Tire_FrontLeft_Detached",
-    "_73f_Tire_BackRight_Detached",
-    "_73f_Tire_BackLeft_Detached",
-    "_73f_Tire_FrontRight_Detached",
-    "Chasis_Detached",
-    "AxleRear_Detached",
-    "BatteryUnit_Detached",
-    "PistonsRear_Detached",
-    "Platform_Detached",
-    "RearHydraulics_Detached",
+    "_73f_Bucket_",
+    "_73f_Tire_FrontLeft_Detached_",
+    "_73f_Tire_BackRight_Detached_",
+    "_73f_Tire_BackLeft_Detached_",
+    "_73f_Tire_FrontRight_Detached_",
+    "Chasis_Detached_",
+    "AxleRear_Detached_",
+    "BatteryUnit_Detached_",
+    "PistonsRear_Detached_",
+    "Platform_Detached_",
+    "RearHydraulics_Detached_",
 ]
 for obj_name in parts_list: # omitted "Chasis_Detached_" in place of windows
-    # print(f"Extracted Object: {obj_name}")
+    print(f"Extracted Object: {obj_name}")
     mesh_list.append(doc.getObject(obj_name).Mesh)
 
 print("RUNNING")
+
+BUGGY_COUNTER = 0
 
 # Find intersections
 for i, sightline_dir in enumerate(sightlines):
@@ -59,13 +61,14 @@ for i, sightline_dir in enumerate(sightlines):
             intersects = True
             break
 
-
+    
     if intersects:
         sightline_end = tuple([a + 10 * b for a, b in zip(driverHead, sightline_dir)])
         intersection_dir = tuple([b - a for a, b in zip(driverHead, list(intersectionList.values())[0])])
         
         if not(sightline_dir[0] * intersection_dir[0] > 0 and sightline_dir[1] * intersection_dir[1] > 0 and sightline_dir[2] * intersection_dir[2] > 0) : 
             print("Directions don't align", intersection_dir, sightline_dir)
+            BUGGY_COUNTER += 1
 
         else:
             my_create_line(driverHead, list(intersectionList.values())[0], f"{name_i}_{i}")
@@ -74,6 +77,6 @@ for i, sightline_dir in enumerate(sightlines):
     # if not intersects:
     #     my_create_line(driverHead, sightline_dir, f"{intersectsName}_{i}")
 
-
+print(f"{BUGGY_COUNTER} BUGS OUT OF {300}")
 
    
