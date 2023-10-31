@@ -65,9 +65,7 @@ def my_create_line(pt1, pt2, obj_name):
     return obj
 
 
-# Specify the field of view angle in degrees
 fov_angle = 180
 
-# Generate sight lines within the specified field of view
 for i, vector in enumerate(generateSightLineDirections(N=400, fov_angle=fov_angle/2)):
     my_create_line((0, 0, 0), vector, f"line_{i}")
