@@ -14,8 +14,9 @@ Sources:
 - https://extremelearning.com.au/how-to-evenly-distribute-points-on-a-sphere-more-effectively-than-the-canonical-fibonacci-lattice/
 '''
 
-def generateSightLineDirections(N = 200):
-    
+
+def generateSightLineDirections(N=200, fov_angle=45):
+
     vectors = []
     inverseGoldenRatio = (5**0.5 - 1)/2
 
@@ -23,12 +24,19 @@ def generateSightLineDirections(N = 200):
         theta = 2 * math.pi * i * inverseGoldenRatio
         phi = math.acos(1 - 2 * (i+0.5) / N)
 
-        direction = ( math.cos(theta) * math.sin(phi) * 100, math.sin(theta) * math.sin(phi) * 100, math.cos(phi) * 100 )
-        vectors.append(
-            (round(direction[0], 6), round(direction[1], 6), round(direction[2], 6))
-        )
+        direction = (math.cos(theta) * math.sin(phi) * 100,
+                     math.sin(theta) * math.sin(phi) * 100, math.cos(phi) * 100)
 
-    return vectors 
+        # May need further tinkering with positive and negatives to include elevation angle.
+        angle = math.degrees(math.acos(direction[2] / 100))
+
+        # Check if the angle is within the specified field of view
+        if angle <= fov_angle:
+            vectors.append((round(direction[0], 6), round(
+                direction[1], 6), round(direction[2], 6)))
+
+    return vectors
+
 
 '''
 my_create_line():
@@ -41,6 +49,8 @@ Return:
 Source:
 - Updated active documenthttps://wiki.freecad.org/Part_scripting
 '''
+
+
 def my_create_line(pt1, pt2, obj_name):
     obj = App.ActiveDocument.addObject("Part::Line", obj_name)
     obj.X1 = pt1[0]
@@ -54,5 +64,10 @@ def my_create_line(pt1, pt2, obj_name):
     App.ActiveDocument.recompute()
     return obj
 
-# for i, vector in enumerate(generateSightLines(N = 100)):
-#     my_create_line((0,0,0), vector, f"line_{i}")
+
+# Specify the field of view angle in degrees
+fov_angle = 180
+
+# Generate sight lines within the specified field of view
+for i, vector in enumerate(generateSightLineDirections(N=400, fov_angle=fov_angle/2)):
+    my_create_line((0, 0, 0), vector, f"line_{i}")
