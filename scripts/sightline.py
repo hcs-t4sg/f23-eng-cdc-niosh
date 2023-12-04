@@ -5,8 +5,9 @@ import Part
 '''
 generateSightLines():
 Parameters: 
-- n, the number of sightlines
-- origin, (x, y, z) coordinates of the camera
+- N, the number of sightlines
+- fov_angle, angle of sensor (cone shape)
+- line_length, length of the line generated
 Returns: a list of n sightlines, each a vector from the given origin
 
 Sources: 
@@ -15,26 +16,30 @@ Sources:
 '''
 
 
-def generateSightLineDirections(N=200, fov_angle=45, line_length=100):
-
+def generateSightLineDirections(N=200, fov_angle=45, line_length=100, origin=(0, 0, 0)):
     vectors = []
-    inverseGoldenRatio = (5**0.5 - 1)/2
+    inverseGoldenRatio = (5**0.5 - 1) / 2
 
-    for i in range(0, N):
+    for i in range(N):
         theta = 2 * math.pi * i * inverseGoldenRatio
-        phi = math.acos(1 - 2 * (i+0.5) / N)
+        phi = math.acos(1 - 2 * (i + 0.5) / N)
 
         direction = (math.cos(theta) * math.sin(phi) * line_length,
                      math.sin(theta) * math.sin(phi) * line_length,
                      math.cos(phi) * line_length)
 
-        # May need further tinkering with positive and negatives to include elevation angle.
+        # Shift direction by origin
+        shifted_direction = (origin[0] + direction[0],
+                             origin[1] + direction[1],
+                             origin[2] + direction[2])
+
         angle = math.degrees(math.acos(direction[2] / line_length))
 
-        # Check if the angle is within the specified field of view
         if angle <= fov_angle:
-            vectors.append((round(direction[0], 6), round(
-                direction[1], 6), round(direction[2], 6)))
+            print(shifted_direction)
+            vectors.append((round(shifted_direction[0], 6),
+                            round(shifted_direction[1], 6),
+                            round(shifted_direction[2], 6)))
 
     return vectors
 
@@ -67,15 +72,14 @@ def my_create_line(pt1, pt2, obj_name):
 
 
 # Function to create a transparent box with a specified midpoint
-def create_transparent_box(length, width, height, transparency=80):
-    # Calculate the half-lengths in each direction
+def create_transparent_box(length, width, height, midpoint, transparency=80):
     half_length = length / 2
     half_width = width / 2
-    half_height = 0
 
-    # Create a box object with a specified midpoint
     box = Part.makeBox(length, width, height)
-    box.Placement.Base = App.Vector(-half_length, -half_width, -half_height)
+    box.Placement.Base = App.Vector(midpoint[0] - half_length,
+                                    midpoint[1] - half_width,
+                                    midpoint[2])
 
     # Create a FreeCAD object to hold the box
     box_object = App.ActiveDocument.addObject(
@@ -90,31 +94,53 @@ def create_transparent_box(length, width, height, transparency=80):
     # Recompute the document to update the view
     App.ActiveDocument.recompute()
 
-
-fov_angle = 90
-
-# for i, vector in enumerate(generateSightLineDirections(N=400, fov_angle=fov_angle/2)):
-#     my_create_line((0, 0, 0), vector, f"line_{i}")
+    box_object.recompute()
 
 
-def intersection_with_box(line_vector, box):
+def intersection_with_box(line_vector, box, origin):
     bbox = box.BoundBox
-    print(App.Vector(line_vector))
-    line = Part.LineSegment(App.Vector(0, 0, 0), App.Vector(line_vector))
+    line = Part.LineSegment(App.Vector(origin), App.Vector(line_vector))
     intersection = bbox.getIntersectionPoint(
-        App.Vector(0, 0, 0), App.Vector(line_vector))
+        App.Vector(origin), App.Vector(line_vector))
     if intersection.x:
         return (intersection.x, intersection.y, intersection.z)
     return None
 
 
-create_transparent_box(50, 30, 100, transparency=60)
-box = App.ActiveDocument.getObject("TransparentBox")
+# Set the midpoint of the box
+origin = (-100, 0, 0)
+create_transparent_box(40, 40, 40, midpoint=origin, transparency=60)
+box = App.ActiveDocument.getObject("TransparentBox001")
 
 fov_angle = 90
-for i, vector in enumerate(generateSightLineDirections(N=400, fov_angle=fov_angle / 2)):
-    intersection_point = intersection_with_box(vector, box.Shape)
+for i, vector in enumerate(generateSightLineDirections(N=400, fov_angle=fov_angle / 2, line_length=100, origin=origin)):
+    print(vector)
+    intersection_point = intersection_with_box(vector, box.Shape, origin)
     if intersection_point:
-        my_create_line((0, 0, 0), intersection_point, f"line_{i}")
+        my_create_line(origin, intersection_point, f"line_{i}")
     else:
-        my_create_line((0, 0, 0), vector, f"line_{i}")
+        my_create_line(origin, vector, f"line_{i}")
+
+
+# def intersection_with_box(line_vector, box):
+#     bbox = box.BoundBox
+#     print(App.Vector(line_vector))
+#     line = Part.LineSegment(App.Vector(0, 0, 0), App.Vector(line_vector))
+#     intersection = bbox.getIntersectionPoint(
+#         App.Vector(0, 0, 0), App.Vector(line_vector))
+#     if intersection.x:
+#         return (intersection.x, intersection.y, intersection.z)
+#     return None
+
+
+# create_transparent_box(50, 30, 100, transparency=60)
+# box = App.ActiveDocument.getObject("TransparentBox")
+
+# fov_angle = 90
+# origin = (10, 20, 30)
+# for i, vector in enumerate(generateSightLineDirections(N=400, fov_angle=(fov_angle / 2), origin=origin)):
+#     intersection_point = intersection_with_box(vector, box.Shape)
+#     if intersection_point:
+#         my_create_line((0, 0, 0), intersection_point, f"line_{i}")
+#     else:
+#         my_create_line((0, 0, 0), vector, f"line_{i}")
