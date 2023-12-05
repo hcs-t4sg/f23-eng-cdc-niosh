@@ -7,9 +7,6 @@ import numpy as np
 doc = App.ActiveDocument
 
 mesh_list = []
-parts_list = [
-    "RearHydraulics_Detached_",
-]
 
 FULL_LIST = [
     "_73f_Bucket_",
@@ -26,7 +23,7 @@ FULL_LIST = [
 ] # "Cab_Detached_" is omitted, as we assume the windows are clear
 
 # Iterate through parts
-for name_i in parts_list:
+for name_i in FULL_LIST:
     print(f"Extracted Object: {name_i}")
 
     points_i = dict()
@@ -63,6 +60,6 @@ for name_i in parts_list:
     np.save(f'{absPathRoot}/mesh_files_npy/{name_i}_points.npy', points_i)
     np.save(f'{absPathRoot}/mesh_files_npy/{name_i}_faces.npy', faces_i)
 
-    break
+    
 
     
