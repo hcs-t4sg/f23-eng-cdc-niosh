@@ -30,6 +30,23 @@ def generateSightLineDirections(N = 200):
 
     return vectors 
 
+def generateSightLineDirectionsGridded(theta_angles = 30, phi_angles = 30):
+    
+    vectors = []
+
+    for i in range(0, theta_angles):
+        for j in range(0, phi_angles):
+            theta = 2 * math.pi * i / theta_angles
+            phi = math.pi * j / phi_angles
+
+            direction = ( math.cos(theta) * math.sin(phi) * 100, math.sin(theta) * math.sin(phi) * 100, math.cos(phi) * 100 )
+            vectors.append(
+                (round(direction[0], 6), round(direction[1], 6), round(direction[2], 6))
+            )
+
+    return vectors 
+
+
 '''
 my_create_line():
 Parameters:
@@ -54,5 +71,5 @@ def my_create_line(pt1, pt2, obj_name):
     App.ActiveDocument.recompute()
     return obj
 
-# for i, vector in enumerate(generateSightLines(N = 100)):
-#     my_create_line((0,0,0), vector, f"line_{i}")
+for i, vector in enumerate(generateSightLineDirectionsGridded()):
+    my_create_line((0,0,0), vector, f"line_{i}")
