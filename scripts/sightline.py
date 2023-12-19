@@ -1,6 +1,9 @@
 import math
 import FreeCAD as App
 import Part
+import pandas as pd
+
+sensors = pd.DataFrame({'Name': ['Sentry ST87 Series'], 'Angle': [150], 'Width':[3], 'Height':[3], 'Range':[10]})
 
 '''
 generateSightLines():
@@ -15,30 +18,7 @@ Sources:
 - https://extremelearning.com.au/how-to-evenly-distribute-points-on-a-sphere-more-effectively-than-the-canonical-fibonacci-lattice/
 '''
 
-sensor_options = """Choose a type of sensor:
-(1) ekdnlkde
-(2) klewkldme
-(3) kdewmdlkew
-"""
 
-
-def start_up():
-    number_of_sensors = int(input("How many sensors do you want to add? "))
-    App.Console.PrintMessage(f"{number_of_sensors} \n")
-    type_of_sensor = int(input(sensor_options))
-    App.Console.PrintMessage(f"{type_of_sensor} \n")
-    origins = []
-    for i in range(number_of_sensors):
-        x_coor = int(input(f"sensor {i} x-coor: "))
-        App.Console.PrintMessage(f"{x_coor}\n")
-        y_coor = int(input(f"sensor {i} y-coor: "))
-        App.Console.PrintMessage(f"{y_coor}\n")
-        z_coor = int(input(f"sensor {i} z-coor: "))
-        App.Console.PrintMessage(f"{z_coor}\n")
-        origin = (x_coor, y_coor, z_coor)
-        origins.append(origin)
-
-    create_multiple(origins)
 
 
 def generateSightLineDirections(N=200, fov_angle=45, line_length=100, origin=(0, 0, 0)):
@@ -147,11 +127,13 @@ fov_angle = 90
 #         my_create_line(origin, vector, f"line_{i}")
 
 
-def create_multiple(origins):
+def create_multiple(origins, sensor_specs):
+    # App.Console.PrintMessage(sensor_specs)
+    # App.Console.PrintMessage(int(sensor_specs.iloc[type_of_sensor, 0]))
     for i in range(len(origins)):
-        create_transparent_box(40, 40, 40, origins[i], i, transparency=60)
+        create_transparent_box((sensor_specs.loc['Height'])*100, (sensor_specs.loc['Width'])*100, (sensor_specs.loc['Range'])*100, origins[i], i, transparency=60)
         box = App.ActiveDocument.getObject(f"TransparentBox{i}")
-        for j, vector in enumerate(generateSightLineDirections(N=400, fov_angle=fov_angle / 2, line_length=100, origin=origins[i])):
+        for j, vector in enumerate(generateSightLineDirections(N=400, fov_angle=sensor_specs.loc['Angle'] / 2, line_length=1000, origin=origins[i])):
             intersection_point = intersection_with_box(
                 vector, box.Shape, origins[i])
             if intersection_point:
@@ -161,28 +143,23 @@ def create_multiple(origins):
                 my_create_line(origins[i], vector, f"set_{i}_line_{j}")
 
 
-start_up()
+number_of_sensors = int(input("How many sensors do you want to add? \n"))
+App.Console.PrintMessage("Sensor options: \n")
+for index, row in sensors.iterrows():
+    App.Console.PrintMessage(f"({index}) {row['Name']} \n")   
+type_of_sensor = int(input("Choose a sensor: "))
 
+App.Console.PrintMessage(f"{sensors.at[type_of_sensor, 'Name']} \n")
+origins = []
+for i in range(number_of_sensors):
+    x_coor = int(input(f"sensor {i} x-coor: "))
+    App.Console.PrintMessage(f"{x_coor}\n")
+    y_coor = int(input(f"sensor {i} y-coor: "))
+    App.Console.PrintMessage(f"{y_coor}\n")
+    z_coor = int(input(f"sensor {i} z-coor: "))
+    App.Console.PrintMessage(f"{z_coor}\n")
+    origin = (x_coor, y_coor, z_coor)
+    origins.append(origin)
 
-# def intersection_with_box(line_vector, box):
-#     bbox = box.BoundBox
-#     print(App.Vector(line_vector))
-#     line = Part.LineSegment(App.Vector(0, 0, 0), App.Vector(line_vector))
-#     intersection = bbox.getIntersectionPoint(
-#         App.Vector(0, 0, 0), App.Vector(line_vector))
-#     if intersection.x:
-#         return (intersection.x, intersection.y, intersection.z)
-#     return None
+create_multiple(origins, sensors.iloc[type_of_sensor, :])
 
-
-# create_transparent_box(50, 30, 100, transparency=60)
-# box = App.ActiveDocument.getObject("TransparentBox")
-
-# fov_angle = 90
-# origin = (10, 20, 30)
-# for i, vector in enumerate(generateSightLineDirections(N=400, fov_angle=(fov_angle / 2), origin=origin)):
-#     intersection_point = intersection_with_box(vector, box.Shape)
-#     if intersection_point:
-#         my_create_line((0, 0, 0), intersection_point, f"line_{i}")
-#     else:
-#         my_create_line((0, 0, 0), vector, f"line_{i}")
