@@ -9,20 +9,9 @@ import constants
 
 driverHead = constants.DRIVER_HEAD
 
-FULL_LIST = [
-    "_73f_Bucket_",
-    "_73f_Tire_FrontLeft_Detached_",
-    "_73f_Tire_BackRight_Detached_",
-    "_73f_Tire_BackLeft_Detached_",
-    "_73f_Tire_FrontRight_Detached_",
-    "Chasis_Detached_",
-    "AxleRear_Detached_",
-    "BatteryUnit_Detached_",
-    "PistonsRear_Detached_",
-    "Platform_Detached_",
-    "RearHydraulics_Detached_",
-] 
+FULL_LIST = constants.FULL_LIST
 
+# Function to generate random sightline directions
 def generateSightLineDirections(N = 200):
     
     vectors = []
