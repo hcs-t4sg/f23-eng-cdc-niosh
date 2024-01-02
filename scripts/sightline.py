@@ -1,9 +1,10 @@
 import math
 import FreeCAD as App
 import Part
-import pandas as pd
 
-sensors = pd.DataFrame({'Name': ['Sentry ST87 Series'], 'Angle': [150], 'Width':[3], 'Height':[3], 'Range':[10]})
+sensors = {
+    0: {'Name': 'Sentry ST87 Series', 'Angle': 150, 'Width':3, 'Height':3, 'Range':10}
+}
 
 '''
 generateSightLines():
@@ -131,9 +132,9 @@ def create_multiple(origins, sensor_specs):
     # App.Console.PrintMessage(sensor_specs)
     # App.Console.PrintMessage(int(sensor_specs.iloc[type_of_sensor, 0]))
     for i in range(len(origins)):
-        create_transparent_box((sensor_specs.loc['Height'])*100, (sensor_specs.loc['Width'])*100, (sensor_specs.loc['Range'])*100, origins[i], i, transparency=60)
+        create_transparent_box((sensor_specs['Height'])*100, (sensor_specs['Width'])*100, (sensor_specs['Range'])*100, origins[i], i, transparency=60)
         box = App.ActiveDocument.getObject(f"TransparentBox{i}")
-        for j, vector in enumerate(generateSightLineDirections(N=400, fov_angle=sensor_specs.loc['Angle'] / 2, line_length=1000, origin=origins[i])):
+        for j, vector in enumerate(generateSightLineDirections(N=400, fov_angle=sensor_specs['Angle'] / 2, line_length=1000, origin=origins[i])):
             intersection_point = intersection_with_box(
                 vector, box.Shape, origins[i])
             if intersection_point:
@@ -145,11 +146,13 @@ def create_multiple(origins, sensor_specs):
 
 number_of_sensors = int(input("How many sensors do you want to add? \n"))
 App.Console.PrintMessage("Sensor options: \n")
-for index, row in sensors.iterrows():
-    App.Console.PrintMessage(f"({index}) {row['Name']} \n")   
+for key in sensors:
+    val = sensors[key]['Name']
+    App.Console.PrintMessage(f"({key}): {val} \n")   
+    
 type_of_sensor = int(input("Choose a sensor: "))
 
-App.Console.PrintMessage(f"{sensors.at[type_of_sensor, 'Name']} \n")
+App.Console.PrintMessage(f"{sensors[key]['Name']} \n")
 origins = []
 for i in range(number_of_sensors):
     x_coor = int(input(f"sensor {i} x-coor: "))
@@ -161,5 +164,5 @@ for i in range(number_of_sensors):
     origin = (x_coor, y_coor, z_coor)
     origins.append(origin)
 
-create_multiple(origins, sensors.iloc[type_of_sensor, :])
+create_multiple(origins, sensors[type_of_sensor])
 
