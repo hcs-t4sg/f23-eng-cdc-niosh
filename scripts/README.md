@@ -5,7 +5,7 @@ This section is for the scripts which compute blindspots around a truck and disp
 ## Setup
 
 ### Requirements
-Our software runs partially as a Python script, and partially in FreeCAD. As a result, using the script requires the [installation of FreeCAD][https://www.freecad.org/downloads.php]. Additionally, we require some packages in Python, outlined in `requirements.txt`. These can be installed by installing Python and pip, the Python package manager, from online, then running `pip install -r requirements.txt`
+Our software runs partially as a Python script, and partially in FreeCAD. As a result, using the script requires the [installation of FreeCAD](https://www.freecad.org/downloads.php). Additionally, we require some packages in Python, outlined in `requirements.txt`. These can be installed by installing Python and pip, the Python package manager, from online, then running `pip install -r requirements.txt`
 
 ### Constants
 There is a file called `constants.py`, where users can define constants such as where the driver is situated, which components of the truck are opaque vs. see through, and also where the folder is located. Please adjust these to each truck file and each user accordingly before running.
