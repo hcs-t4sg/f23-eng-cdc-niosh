@@ -2,7 +2,11 @@ import math
 import FreeCAD as App
 import Part
 import numpy as np
+import os, sys
+sys.path.append(os.path.dirname(__file__))
 
+import constants
+print("DAOJFIJDSA")
 def my_create_line(pt1, pt2, obj_name):
     obj = App.ActiveDocument.addObject("Part::Line", obj_name)
     obj.X1 = pt1[0]
@@ -16,7 +20,7 @@ def my_create_line(pt1, pt2, obj_name):
     App.ActiveDocument.recompute()
     return obj
 
-driverHead = (352.5016492337469, 339.719522252282, -105.5012320445894)
+driverHead = constants.DRIVER_HEAD
 
 FULL_LIST = [
     "_73f_Bucket_",
@@ -39,7 +43,7 @@ NONCANDIDATES_SET = set()
 
 for name_i in FULL_LIST:
 
-    absPathRoot = '/Users/djeong/Documents/2023_Harvard/T4SG/f23-eng-cdc-niosh/scripts/Davin_blindspot'
+    absPathRoot = constants.ABS_PATH_ROOT
     ray_directions = np.load(f"{absPathRoot}/result_files_npy/{name_i}_directions.npy")
     results = np.load(f"{absPathRoot}/result_files_npy/{name_i}_results.npy")
 

@@ -2,7 +2,12 @@ import numpy as np
 import trimesh
 import math
 
-driverHead = (352.5016492337469, 339.719522252282, -105.5012320445894)
+import os, sys
+sys.path.append(os.path.dirname(__file__))
+
+import constants
+
+driverHead = constants.DRIVER_HEAD
 
 FULL_LIST = [
     "_73f_Bucket_",
@@ -40,7 +45,7 @@ def generateSightLineDirections(N = 200):
 
 for name_i in FULL_LIST:
     print(name_i)
-    absPathRoot = '/Users/djeong/Documents/2023_Harvard/T4SG/f23-eng-cdc-niosh/scripts/Davin_blindspot'
+    absPathRoot = constants.ABS_PATH_ROOT
     points_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}_points.npy')
     faces_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}_faces.npy')
 

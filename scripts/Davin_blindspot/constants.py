@@ -1,0 +1,3 @@
+ABS_PATH_ROOT = 'C:/Data/Harvard/T4SG/f23-eng-cdc-niosh/scripts/Davin_blindspot'
+
+DRIVER_HEAD = (352.5016492337469, 339.719522252282, -105.5012320445894)
