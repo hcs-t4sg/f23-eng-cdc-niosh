@@ -68,6 +68,15 @@ for i, sightline_dir in enumerate(sightlines):
         
         if not(sightline_dir[0] * intersection_dir[0] > 0 and sightline_dir[1] * intersection_dir[1] > 0 and sightline_dir[2] * intersection_dir[2] > 0) : 
             print("Directions don't align", intersection_dir, sightline_dir)
+            
+            intersectionList = mesh_i.nearestFacetOnRay(sightline_end, [comp for comp in sightline_dir])
+            if len(intersectionList.values()) < 0: 
+                continue
+            intersection_dir = tuple([b - a for a, b in zip(driverHead, list(intersectionList.values())[0])])
+            print(intersection_dir, sightline_dir) 
+            if sightline_dir[0] * intersection_dir[0] > 0 and sightline_dir[1] * intersection_dir[1] > 0 and sightline_dir[2] * intersection_dir[2] > 0:
+                print("BUG FIXED")
+
             BUGGY_COUNTER += 1
 
         else:
