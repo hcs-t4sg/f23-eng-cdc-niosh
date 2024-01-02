@@ -2,22 +2,16 @@ import numpy as np
 import trimesh
 import math
 
-driverHead = (352.5016492337469, 339.719522252282, -105.5012320445894)
+import os, sys
+sys.path.append(os.path.dirname(__file__))
 
-FULL_LIST = [
-    "_73f_Bucket_",
-    "_73f_Tire_FrontLeft_Detached_",
-    "_73f_Tire_BackRight_Detached_",
-    "_73f_Tire_BackLeft_Detached_",
-    "_73f_Tire_FrontRight_Detached_",
-    "Chasis_Detached_",
-    "AxleRear_Detached_",
-    "BatteryUnit_Detached_",
-    "PistonsRear_Detached_",
-    "Platform_Detached_",
-    "RearHydraulics_Detached_",
-] 
+import constants
 
+driverHead = constants.DRIVER_HEAD
+
+FULL_LIST = constants.FULL_LIST
+
+# Function to generate random sightline directions
 def generateSightLineDirections(N = 200):
     
     vectors = []
@@ -40,7 +34,7 @@ def generateSightLineDirections(N = 200):
 
 for name_i in FULL_LIST:
     print(name_i)
-    absPathRoot = '/Users/djeong/Documents/2023_Harvard/T4SG/f23-eng-cdc-niosh/scripts/Davin_blindspot'
+    absPathRoot = constants.ABS_PATH_ROOT
     points_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}_points.npy')
     faces_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}_faces.npy')
 

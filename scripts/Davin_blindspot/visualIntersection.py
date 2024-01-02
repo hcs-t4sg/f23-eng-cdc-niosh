@@ -2,7 +2,12 @@ import math
 import FreeCAD as App
 import Part
 import numpy as np
+import os, sys
+sys.path.append(os.path.dirname(__file__))
 
+import constants
+
+# Function to create a line in FreeCAD
 def my_create_line(pt1, pt2, obj_name):
     obj = App.ActiveDocument.addObject("Part::Line", obj_name)
     obj.X1 = pt1[0]
@@ -16,46 +21,41 @@ def my_create_line(pt1, pt2, obj_name):
     App.ActiveDocument.recompute()
     return obj
 
-driverHead = (352.5016492337469, 339.719522252282, -105.5012320445894)
+# Origin from which all lines start
+driverHead = constants.DRIVER_HEAD
 
-FULL_LIST = [
-    "_73f_Bucket_",
-    "_73f_Tire_FrontLeft_Detached_",
-    "_73f_Tire_BackRight_Detached_",
-    "_73f_Tire_BackLeft_Detached_",
-    "_73f_Tire_FrontRight_Detached_",
-    "Chasis_Detached_",
-    "AxleRear_Detached_",
-    "BatteryUnit_Detached_",
-    "PistonsRear_Detached_",
-    "Platform_Detached_",
-    "RearHydraulics_Detached_",
-] 
+# Get list of parts
+FULL_LIST = constants.FULL_LIST
 
 doc = App.ActiveDocument
 
 CANDIDATES_SET = set()
 NONCANDIDATES_SET = set()
 
+# For each part for which sightlines were computed, we want to get the sightline directions and results
 for name_i in FULL_LIST:
 
-    absPathRoot = '/Users/djeong/Documents/2023_Harvard/T4SG/f23-eng-cdc-niosh/scripts/Davin_blindspot'
+    absPathRoot = constants.ABS_PATH_ROOT
     ray_directions = np.load(f"{absPathRoot}/result_files_npy/{name_i}_directions.npy")
     results = np.load(f"{absPathRoot}/result_files_npy/{name_i}_results.npy")
 
+    # We look at each line and corresponding result
     for direction_j, results_j, in zip(ray_directions, results):    
         direction_j = tuple(direction_j)
 
+        # In the case that the line intersects, we add it to the NON-CANDIDATES SET -- lines we can't see
+        # We remove it from the candidates if it had been added as well
         if results_j == True:
-            # Intersects
             if direction_j in CANDIDATES_SET:
                 CANDIDATES_SET.remove(direction_j)
             NONCANDIDATES_SET.add(direction_j)
+
+        # If no intersection, we add the line to the candidates if it hasn't been blocked yet
         else:
-            # No intersection
             if not direction_j in NONCANDIDATES_SET:
                 CANDIDATES_SET.add(direction_j)
             
+# Draw lines in candidate set -- visible set
 for i, direction_i in enumerate(CANDIDATES_SET):
     sightline_end = [
         50 * direction_i[0] + driverHead[0],
