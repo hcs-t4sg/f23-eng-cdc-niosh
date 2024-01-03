@@ -4,3 +4,8 @@
 scripts/Davin_blindspot/mesh_files_stl/
 scripts/Davin_blindspot/result_files_npy/
 scripts/Davin_blindspot/mesh_files_npy/
+
+
+final_blindspot/mesh_files_stl/
+final_blindspot/Davin_blindspot/result_files_npy/
+final_blindspot/Davin_blindspot/mesh_files_npy/
