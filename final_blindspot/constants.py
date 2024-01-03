@@ -1,5 +1,6 @@
 # Path to FreeCAD (MacOS)
 # For Windows, this path might look like 'C:\\FreeCAD\\bin'
+# For more information, please visit FreeCAD's documentation. 
 FREECADPATH = '/Applications/FreeCAD.app/Contents/Resources/lib'
 
 # File in directory "models/" to run blindspot algorithm (Default: Truck Model)
