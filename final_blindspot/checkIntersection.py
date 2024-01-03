@@ -2,81 +2,61 @@ import numpy as np
 import trimesh
 import math
 
-driverHead = (352.5016492337469, 339.719522252282, -105.5012320445894)
+import constants
 
-FULL_LIST = [
-    "_73f_Bucket_",
-    "_73f_Tire_FrontLeft_Detached_",
-    "_73f_Tire_BackRight_Detached_",
-    "_73f_Tire_BackLeft_Detached_",
-    "_73f_Tire_FrontRight_Detached_",
-    "Chasis_Detached_",
-    "AxleRear_Detached_",
-    "BatteryUnit_Detached_",
-    "PistonsRear_Detached_",
-    "Platform_Detached_",
-    "RearHydraulics_Detached_",
-] 
+driverHead = constants.DRIVER_HEAD
+
+absPathRoot = constants.ABS_PATH_ROOT
+TRUCK_NAME = constants.TRUCK_NAME
+
+FULL_LIST = np.load(f'{absPathRoot}/{TRUCK_NAME}_part_names.npy')
 
 '''
-generateSightLines():
+generateSightLinesGridded():
 Parameters: 
-- n, the number of sightlines
-- origin, (x, y, z) coordinates of the camera
-Returns: a list of n sightlines, each a vector from the given origin
-
-Sources: 
-- https://arxiv.org/pdf/0912.4540.pdf
-- https://extremelearning.com.au/how-to-evenly-distribute-points-on-a-sphere-more-effectively-than-the-canonical-fibonacci-lattice/
+- theta_angles, the number of rays to split across theta (the horizontal angle spanning 360 degrees in the x-y plane)
+- phi_angles, the number of rays to split across phi (the vertical angle with the z-axis, spans 180 degrees)
+Returns: a list of n sightline directions, each a vector from the given origin, and their corresponding theta and phi
 '''
-
-def generateSightLineDirections(N = 200):
-    
-    vectors = []
-    inverseGoldenRatio = (5**0.5 - 1)/2
-
-    for i in range(0, N):
-        theta = 2 * math.pi * i * inverseGoldenRatio
-        phi = math.acos(1 - 2 * (i+0.5) / N)
-
-        direction = ( math.cos(theta) * math.sin(phi) * 100, math.sin(theta) * math.sin(phi) * 100, math.cos(phi) * 100 )
-        vectors.append(
-            (round(direction[0], 6), round(direction[1], 6), round(direction[2], 6))
-        )
-
-    return vectors 
-
 def generateSightLineDirectionsGridded(theta_angles = 30, phi_angles = 15):
     
     ray_directions = []
-    ray_origin = []
     thetas = []
     phis = []
 
+    # Iterate over all possible theta and phi combinations
     for i in range(0, theta_angles):
         for j in range(0, phi_angles):
+            # Compute the correct theta and pi for this angle
             theta = 2 * math.pi * i / theta_angles
             phi = math.pi * j / phi_angles
+            # Add thetas to arrays
             thetas.append(i)
             phis.append(j)
-            ray_origin.append(driverHead)
+            # Convert spherical coordinates to Cartesian direction, assuming radius of 100 and append it to directions
             direction = (math.cos(theta) * math.sin(phi) * 100, math.sin(theta) * math.sin(phi) * 100, math.cos(phi) * 100 )
             ray_directions.append((round(direction[0], 6), round(direction[1], 6), round(direction[2], 6)))
 
-    return ray_origin, ray_directions, thetas, phis
+    return ray_directions, thetas, phis
 
+print(FULL_LIST)
 
+# Iterate over each piece in full list
 for name_i in FULL_LIST:
-    absPathRoot = 'C:/Data/Harvard/T4SG/f23-eng-cdc-niosh/blindspot'
-    points_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}points.npy')
-    faces_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}faces.npy')
+    print(name_i)
+    # Import data
+    points_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}_points.npy')
+    faces_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}_faces.npy')
 
+    # Make mesh for the list and compute intersector
     mesh = trimesh.Trimesh(vertices = points_i, faces = faces_i)
     mesh = trimesh.ray.ray_triangle.RayMeshIntersector(mesh)
     
-    ray_origin, ray_directions, thetas, phis = generateSightLineDirectionsGridded()
-    ret = mesh.intersects_any(ray_origin, ray_directions)
+    # Get rays and see if they intersect
+    ray_directions, thetas, phis = generateSightLineDirectionsGridded(constants.THETAS, constants.PHIS)
+    ret = mesh.intersects_any([driverHead] * len(ray_directions), ray_directions)
 
+    # Save results
     np.save(f"{absPathRoot}/result_files_npy/{name_i}_directions.npy", np.array(ray_directions))
     np.save(f"{absPathRoot}/result_files_npy/{name_i}_results.npy", np.array(ret))
     np.save(f"{absPathRoot}/result_files_npy/{name_i}_thetas.npy", np.array(thetas))
