@@ -5,7 +5,7 @@ This section is for the scripts which compute blindspots around a truck and disp
 ## Setup
 
 ### Requirements
-Our software runs partially as a Python script, and partially in FreeCAD. As a result, using the script requires the [installation of FreeCAD](https://www.freecad.org/downloads.php). Additionally, we require some packages in Python, outlined in `requirements.txt`. These can be installed by installing Python and pip, the Python package manager, from online, then running `pip install -r requirements.txt`
+Our software runs partially as a Python script, and partially in FreeCAD. As a result, using the script requires the [installation of FreeCAD][https://www.freecad.org/downloads.php]. Additionally, we require some packages in Python, outlined in `requirements.txt`. These can be installed by installing Python and pip, the Python package manager, from online, then running `pip install -r requirements.txt`
 
 ### Constants
 There is a file called `constants.py`, where users can define constants such as where the driver is situated, which components of the truck are opaque vs. see through, and also where the folder is located. Please adjust these to each truck file and each user accordingly before running.
@@ -21,4 +21,4 @@ This is the first file to run in the workflow, and it takes as input a .FCStd fi
 This is the second file in the workflow. It checks over all of the converted files about the truck, which are now more Python-operable, and uses a package called  ```trimesh``` to verify if a range of sightlines are or are not blocked by them. It then saves the sightlines and the corresponding results (blocked vs unblocked).
 
 ### ```visualIntersect.py```
-This is the final file in the workflow. After running the previous two files, opening this file and running it in FreeCAD alongside the original truck file should create a visualization of blindspots around the truck.
+This is the final file in the workflow. After running the previous two files, opening this file and running it in FreeCAD alongside the original truck file should create a visualization of blindspots around the truck. 
