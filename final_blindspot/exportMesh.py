@@ -3,6 +3,7 @@ import FreeCAD as App
 import Part
 import numpy as np
 
+# Add path to access constants file
 import os, sys
 sys.path.append(os.path.dirname(__file__))
 
@@ -15,6 +16,7 @@ mesh_list = []
 
 # Which parts should be ommitted from obstruction
 CAB = constants.CAB
+names = []
 
 absPathRoot = constants.ABS_PATH_ROOT
 
@@ -33,6 +35,7 @@ for obj in doc.Objects:
         
     # If opaque, we process
     if is_opaque:
+        names.append(name_i)
         points_i = dict()
         faces_i = []
 
@@ -56,12 +59,15 @@ for obj in doc.Objects:
             # Add index list to faces_i
             faces_i.append(index_list)
 
-    # Progress tracking
-    print(f"Reconstruction of {name_i} consists of {len(points_i)} points and {len(faces_i)} faces")
-    
-    # Save all points and facets when converting an object to a mesh
-    points_i = np.array([a for a in points_i.keys()])
-    faces_i = np.array(faces_i)
+        # Progress tracking
+        print(f"Reconstruction of {name_i} consists of {len(points_i)} points and {len(faces_i)} faces")
+        
+        # Save all points and facets when converting an object to a mesh
+        points_i = np.array([a for a in points_i.keys()])
+        faces_i = np.array(faces_i)
 
-    np.save(f'{absPathRoot}/mesh_files_npy/{name_i}_points.npy', points_i)
-    np.save(f'{absPathRoot}/mesh_files_npy/{name_i}_faces.npy', faces_i)
+        np.save(f'{absPathRoot}/mesh_files_npy/{name_i}_points.npy', points_i)
+        np.save(f'{absPathRoot}/mesh_files_npy/{name_i}_faces.npy', faces_i)
+
+TRUCK_NAME = constants.TRUCK_NAME
+np.save(f'{absPathRoot}/{TRUCK_NAME}_part_names.npy', np.array(names))
