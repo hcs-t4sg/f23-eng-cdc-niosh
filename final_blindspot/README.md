@@ -17,7 +17,7 @@ Specifically, variables `FREECADPATH` and `ABS_PATH_ROOT` are user-dependent and
 The main product of this project has been split into two files:[^1]
 
 ### ```preprocessing.py```
-This is the first file to run in the workflow. It exports objects from FreeCAD and uses a package called  ```trimesh``` to verify if a range of sightlines are or are not blocked by them. It then saves the sightlines and the corresponding results (blocked vs unblocked).[^2]
+This is the first file to run in the workflow. It exports objects from FreeCAD and uses a package called  ```trimesh``` to verify if a range of sightlines are or are not blocked by them. It then saves the sightlines and the corresponding results (blocked vs unblocked).[^2] To run this script, make sure you have installed the requirements above, and run `python preprocessing.py` in its directory on your terminal. 
 
 ### ```visualization.py```
 Opening this file and running it in FreeCAD alongside the original truck file should create a visualization of blindspots around the truck. To run this script, open the truck file in FreeCAD and open this file in FreeCAD as well, then run the file as a macro (the green arrow at the top).
