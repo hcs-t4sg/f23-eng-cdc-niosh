@@ -1,0 +1,14 @@
+LOG FILE OF MOST RECENT FINAL_BLINDSPOT RUN
+GENERATED AFTER EACH RUN
+
+Reconstruction of _73f_Tire_FrontLeft_Detached consists of 43634 points and 87068 faces
+Reconstruction of _73f_Tire_BackRight_Detached consists of 65115 points and 129862 faces
+Reconstruction of _73f_Tire_BackLeft_Detached consists of 65139 points and 129884 faces
+Reconstruction of _73f_Tire_FrontRight_Detached consists of 43641 points and 87086 faces
+Reconstruction of Chasis_Detached consists of 8316 points and 13054 faces
+Reconstruction of _73f_Bucket consists of 4831 points and 9706 faces
+Reconstruction of AxleRear_Detached consists of 3778 points and 5851 faces
+Reconstruction of BatteryUnit_Detached consists of 543 points and 758 faces
+Reconstruction of PistonsRear_Detached consists of 3348 points and 4924 faces
+Reconstruction of Platform_Detached consists of 3083 points and 4682 faces
+Reconstruction of RearHydraulics_Detached consists of 1633 points and 2100 faces
