@@ -20,3 +20,6 @@ a.Points=p
 c=[(1.0,0.0,0.0)] * 100
 a.Colors=c
 a.ViewObject.DisplayMode="Color"
+
+for i in range(3):
+    print("THIS IS A LOOP ON STEP: " + str(i))
