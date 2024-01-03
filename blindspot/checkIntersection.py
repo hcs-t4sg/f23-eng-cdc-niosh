@@ -67,9 +67,9 @@ def generateSightLineDirectionsGridded(theta_angles = 30, phi_angles = 15):
 
 
 for name_i in FULL_LIST:
-    absPathRoot = '/Users/hannawosenu/Desktop/cdcniosh/f23-eng-cdc-niosh/blindspot'
-    points_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}_points.npy')
-    faces_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}_faces.npy')
+    absPathRoot = 'C:/Data/Harvard/T4SG/f23-eng-cdc-niosh/blindspot'
+    points_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}points.npy')
+    faces_i = np.load(f'{absPathRoot}/mesh_files_npy/{name_i}faces.npy')
 
     mesh = trimesh.Trimesh(vertices = points_i, faces = faces_i)
     mesh = trimesh.ray.ray_triangle.RayMeshIntersector(mesh)

@@ -63,7 +63,7 @@ xyz_coordinates = initialize_twodlist()
 
 for name_i in FULL_LIST:
 
-    absPathRoot = '/Users/hannawosenu/Desktop/cdcniosh/f23-eng-cdc-niosh/blindspot'
+    absPathRoot = 'C:/Data/Harvard/T4SG/f23-eng-cdc-niosh/blindspot'
     ray_directions = np.load(f"{absPathRoot}/result_files_npy/{name_i}_directions.npy")
     results = np.load(f"{absPathRoot}/result_files_npy/{name_i}_results.npy")
     thetas = np.load(f"{absPathRoot}/result_files_npy/{name_i}_thetas.npy")
@@ -86,13 +86,13 @@ for name_i in FULL_LIST:
                 bfs_map[theta_j][phi_j] = 1
                 xyz_coordinates[theta_j][phi_j] = (50 * direction_j[0] + driverHead[0], 50 * direction_j[1] + driverHead[1], 50 * direction_j[2] + driverHead[2])
 
-for i, direction_i in enumerate(CANDIDATES_SET):
-    sightline_end = [
-        50 * direction_i[0] + driverHead[0],
-        50 * direction_i[1] + driverHead[1],
-        50 * direction_i[2] + driverHead[2],
-    ]
-    my_create_line(driverHead, sightline_end, f"{i}")
+# for i, direction_i in enumerate(CANDIDATES_SET):
+#     sightline_end = [
+#         50 * direction_i[0] + driverHead[0],
+#         50 * direction_i[1] + driverHead[1],
+#         50 * direction_i[2] + driverHead[2],
+#     ]
+#     my_create_line(driverHead, sightline_end, f"{i}")
 
 # finds first 0 and starts there (first element in queue)
 def find_first_zero(matrix):
@@ -121,8 +121,52 @@ while queue:
                     visited.add((next_row, next_col))
                     if bfs_map[next_row][next_col] == 1:
                         border.add((next_row, next_col))
-# , key=lambda x: x[1]          
-sorted_border = sorted(border)
+# , key=lambda x: x[1]       
+# 
+
+def are_adjacent_cells(cell_a, cell_b, num_rows, num_cols):
+    if cell_a[0] == cell_b[0]:
+        if abs(cell_a[1] - cell_b[1]) == 1 or abs(cell_a[1] - cell_b[1]) == num_cols - 1:
+            return True
+        
+    if cell_a[1] == cell_b[1]:
+        if abs(cell_a[0] - cell_b[0]) == 1 or abs(cell_a[0] - cell_b[0]) == num_rows - 1:
+            return True
+        
+    return False
+
+def are_diagonal_cells(cell_a, cell_b, num_rows, num_cols):
+    if abs(cell_a[0] - cell_b[0]) == 1 and abs(cell_a[1] - cell_b[1]) == 1:
+        return True
+    
+    return False
+
+sorted_border = [border.pop()]
+
+counter = 0
+
+while len(border) > 0:
+    prev_elem = sorted_border[-1]
+
+    if len(sorted_border) == counter:
+        break
+
+    
+    counter += 1
+    found = False
+    for elem in border:
+        if are_adjacent_cells(elem, prev_elem, 30, 15):
+            border.remove(elem)
+            sorted_border.append(elem)
+            found = True
+            break
+    if not found:
+        for elem in border:
+            if are_diagonal_cells(elem, prev_elem, 30, 15):
+                border.remove(elem)
+                sorted_border.append(elem)
+                break
+
 xyz_points = []
 for coordinate in sorted_border:
     #find (xyz) coordinate of border points
