@@ -1,13 +1,13 @@
 # Path to FreeCAD (MacOS)
 # For Windows, this path might look like 'C:\\FreeCAD\\bin'
 # For more information, please visit FreeCAD's documentation. 
-FREECADPATH = '/Applications/FreeCAD.app/Contents/Resources/lib'
+FREECADPATH = 'C:/Program Files/FreeCAD 0.21/bin'
 
 # File in directory "models/" to run blindspot algorithm (Default: Truck Model)
 FILENAME = 'truck.FCStd'
 
 # Path to where this code is located
-ABS_PATH_ROOT = '/Users/djeong/Documents/2023_Harvard/T4SG/f23-eng-cdc-niosh/'
+ABS_PATH_ROOT = 'C:/Data/Harvard/T4SG/f23-eng-cdc-niosh/'
 
 # The location of the driver's head 
 DRIVER_HEAD = (352.5016492337469, 339.719522252282, -105.5012320445894)

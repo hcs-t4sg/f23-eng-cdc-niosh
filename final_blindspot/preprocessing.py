@@ -32,8 +32,8 @@ def generateSightLineDirectionsGridded(theta_angles = 30, phi_angles = 15):
             # Add thetas to arrays
             thetas.append(i)
             phis.append(j)
-            # Convert spherical coordinates to Cartesian direction, assuming radius of 100 and append it to directions
-            direction = (math.cos(theta) * math.sin(phi) * 100, math.sin(theta) * math.sin(phi) * 100, math.cos(phi) * 100 )
+            # Convert spherical coordinates to Cartesian direction, assuming radius of 50 and append it to directions
+            direction = (math.cos(theta) * math.sin(phi) * 50, math.sin(theta) * math.sin(phi) * 50, math.cos(phi) * 50 )
             ray_directions.append((round(direction[0], 6), round(direction[1], 6), round(direction[2], 6)))
 
     return ray_directions, thetas, phis

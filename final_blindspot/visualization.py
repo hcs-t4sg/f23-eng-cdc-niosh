@@ -98,14 +98,14 @@ for name_i in constants.FULL_LIST:
                 bfs_map[theta_j][phi_j] = 1
                 xyz_coordinates[theta_j][phi_j] = (50 * direction_j[0] + driverHead[0], 50 * direction_j[1] + driverHead[1], 50 * direction_j[2] + driverHead[2])
 
-# # THIS BLOCK OF CODE DRAWS IN THE SIGHTLINES WHICH ARE VISIBLE
-# for i, direction_i in enumerate(CANDIDATES_SET):
-#     sightline_end = [
-#         50 * direction_i[0] + driverHead[0],
-#         50 * direction_i[1] + driverHead[1],
-#         50 * direction_i[2] + driverHead[2],
-#     ]
-#     my_create_line(driverHead, sightline_end, f"{i}")
+# THIS BLOCK OF CODE DRAWS IN THE SIGHTLINES WHICH ARE VISIBLE
+for i, direction_i in enumerate(CANDIDATES_SET):
+    sightline_end = [
+        50 * direction_i[0] + driverHead[0],
+        50 * direction_i[1] + driverHead[1],
+        50 * direction_i[2] + driverHead[2],
+    ]
+    my_create_line(driverHead, sightline_end, f"{i}")
 
 # finds first 0 and starts there (first element in queue)
 def find_first_zero(matrix):

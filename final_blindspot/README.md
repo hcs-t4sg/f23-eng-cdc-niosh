@@ -5,7 +5,7 @@ This section is for the scripts which compute blindspots around a truck and disp
 ## Setup
 
 ### Requirements
-Our software runs partially as a Python script, and partially in FreeCAD. As a result, using the script requires the [installation of FreeCAD](https://www.freecad.org/downloads.php). Additionally, we require some packages in Python, outlined in `requirements.txt`. These can be installed by installing Python and pip, the Python package manager, from online, then running `pip install -r requirements.txt`
+Our software runs partially as a Python script, and partially in FreeCAD. As a result, using the script requires the [installation of FreeCAD](https://www.freecad.org/downloads.php). Also, to be compatible with FreeCAD, we need Python 3.8 on Windows. Additionally, we require some packages in Python, outlined in `requirements.txt`. These can be installed by installing Python and pip, the Python package manager, from online, then running `pip install -r requirements.txt`.
 
 ### Constants
 There is a file called `constants.py`, where users can define constants such as where the driver is situated, which components of the truck are opaque vs. see through, and also where the folder is located. Please adjust these to each truck file and each user accordingly before running.
@@ -25,3 +25,7 @@ Opening this file and running it in FreeCAD alongside the original truck file sh
 [^1]: Unfortunately, [FreeCAD does not support the use of its GUI software in external scripts and the use of third-party packages in its macro scripts](https://github.com/FreeCAD/FreeCAD-documentation/blob/main/wiki/FreeCAD_Scripting_Basics.md). As a result, our process is divided between the component using ```trimesh``` and that using FreeCAD's GUI. 
 
 [^2]: For debugging purposes, file "log.txt" will be generated every time this file is run. 
+
+## Sensors
+
+In addition to the main blindspot visualization, we have begun work on sensors. ```create_sensors.py``` contains code which generates bounding boxes and sensor fields of view given a set of sensor specs and user-defined locations for these sensors. However, these sight lines are currently not included in the blindspot computation.
